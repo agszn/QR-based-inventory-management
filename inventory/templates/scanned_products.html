@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanned Products</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Scanned Products</h1>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Units</th>
+            <th>Fragile</th>
+            <th>Weight</th>
+            <th>Unit</th>
+            <th>Item Class</th>
+        </tr>
+        {% for product in scanned_products %}
+        <tr>
+            <td>{{ product.name }}</td>
+            <td>{{ product.units }}</td>
+            <td>{{ "Yes" if product.fragile else "No" }}</td>
+            <td>{{ product.weight }}</td>
+            <td>{{ product.unit }}</td>
+            <td>{{ product.item_class }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

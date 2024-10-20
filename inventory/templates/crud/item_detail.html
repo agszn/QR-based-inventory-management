@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ item.name }}</title>
+    <style>
+        /* CSS styles */
+    </style>
+</head>
+<body>
+    <h1>{{ item.name }}</h1>
+    <p>Units: {{ item.units }}</p>
+    <p>Fragile: {% if item.fragile %}Yes{% else %}No{% endif %}</p>
+    <p>Weight: {{ item.weight }} {{ item.unit }}</p>
+    <p>Class: {{ item.item_class }}</p>
+</body>
+</html>

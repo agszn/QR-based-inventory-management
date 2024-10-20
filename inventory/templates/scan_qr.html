@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}QR Code Scanner{% endblock %}
+{% load static %}
+{% block style %}
+<style>
+    /* styles.css */
+    #scanner-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #scanner-video {
+        width: 80%;
+        max-width: 600px;
+        height: auto;
+    }
+
+    #result-container {
+        text-align: center;
+    }
+    
+    .scanned-data {
+        margin-bottom: 10px;
+    }
+    
+    .send-button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<center>
+    <div id="scanner-container">
+        <video id="scanner-video"></video>
+    </div>
+    <div id="result-container"></div>
+    <button id="scan-button">Scan QR Code</button>
+</center>
+<input type="button" value="Send Checked Values" class="send-button" onclick="sendCheckedValues()">
+<script src="{% static 'jslib/instascan.min.js' %}"></script>
+<script>
+    // Function to get CSRF token from cookie
+    function getCSRFToken() {
+        const cookies = document.cookie.split('; ');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].split('=');
+            if (cookie[0] === 'csrftoken') {
+                return cookie[1];
+            }
+        }
+        return '';
+    }
+
+    // script.js
+    const scanner = new Instascan.Scanner({ video: document.getElementById('scanner-video') });
+
+    scanner.addListener('scan', function (content) {
+        const resultContainer = document.getElementById('result-container');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'checkbox';
+        checkbox.value = content;
+        
+        const label = document.createElement('label');
+        label.textContent = content;
+        label.appendChild(checkbox);
+        
+        const container = document.createElement('div');
+        container.className = 'scanned-data';
+        container.appendChild(label);
+        
+        resultContainer.appendChild(container);
+    });
+
+    document.getElementById('scan-button').addEventListener('click', function() {
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+                scanner.start(cameras[0]);
+            } else {
+                console.error('No cameras found.');
+            }
+        }).catch(function (e) {
+            console.error(e);
+        });
+    });
+
+    function sendCheckedValues() {
+    const checkboxes = document.querySelectorAll('.checkbox:checked');
+    const checkedValues = [];
+    checkboxes.forEach(function(checkbox) {
+        checkedValues.push(checkbox.value);
+    });
+
+    console.log('Checked Values:', checkedValues); // Log checked values to console
+
+    // Send checked values to backend via AJAX
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/inventory/receive_checked_values/', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                console.log('Values sent successfully');
+            } else {
+                console.error('Error sending values');
+            }
+        }
+    };
+    xhr.send(JSON.stringify({ checked_values: checkedValues }));
+}
+
+</script>
+{% endblock %}

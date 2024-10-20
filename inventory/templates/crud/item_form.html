@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% if form.instance.pk %}Update Item{% else %}Create New Item{% endif %}</title>
+    <style>
+        /* CSS styles */
+    </style>
+</head>
+<body>
+    <h1>{% if form.instance.pk %}Update Item{% else %}Create New Item{% endif %}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="{% if form.instance.pk %}Update{% else %}Create{% endif %}">
+    </form>
+</body>
+</html>

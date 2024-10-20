@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Item?</title>
+    <style>
+        /* CSS styles */
+    </style>
+</head>
+<body>
+    <h1>Delete "{{ item.name }}"?</h1>
+    <p>Are you sure you want to delete this item?</p>
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Confirm Delete">
+    </form>
+</body>
+</html>

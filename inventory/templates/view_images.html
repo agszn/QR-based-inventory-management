@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}View QR{% endblock %}
+{% block style %}
+    <style>
+        /* Optional: Add some basic styling */
+        ul {
+            list-style-type: none;
+            padding: 0;
+            overflow-x: auto; /* Add horizontal scrolling if needed */
+            white-space: nowrap; /* Ensure images stay in a single line */
+        }
+        li {
+            display: inline-block;
+            margin-right: 20px;
+            vertical-align: top; /* Align images to the top */
+        }
+        img {
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .actions {
+            margin-left: 10px;
+        }
+    </style>
+{% endblock %}
+{% block index %}
+{% endblock %}
+{% block content %}
+<center>
+    <h1>Images</h1>
+    <ul>
+        {% for image_file in image_files %}
+        <li>
+            <span>{{ image_file }}</span><br>
+            <img src="/static/qr/{{ image_file }}" alt="{{ image_file }}" height="100">
+            
+            <div class="actions">
+                <a href="{% url 'inventory:delete_image' image_file %}">Delete</a>
+                <a href="{% url 'inventory:hide_image' image_file %}">Hide</a>
+            </div>
+        </li>        
+        {% endfor %}
+    </ul>
+    <a href="{% url 'inventory:show_all_images' %}">Show All Images</a>
+</center>
+{% endblock %}
