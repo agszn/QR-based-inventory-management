@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block style %}
+<!-- Materialize CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+
+    .container {
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        max-width: 800px;
+    }
+
+    .modal {
+        max-width: 80%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="text-align: center;">
+    <h1>Dashboard</h1>
+    Hello, {{ request.user.username }}
+    <p>Welcome to your Page</p>
+</div>
+<!-- start -->
+<div class="container mt-5 p-5 rounded shadow bg-white">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="mb-3 alert alert-success text-center">
+        {{message}}
+    </div>
+    {% endfor %}
+    {% endif %}
+    <div class="d-flex mb-3 justify-content-between align-items-center">
+        {% if user.is_authenticated %}
+        <a href="" data-target="addnewconsumerModal" class="btn btn-primary modal-trigger px-3 btn-sm">Add new Victim</a>
+        {% endif %}
+        <div class="">
+            <form method="post" class="d-flex">
+                {% csrf_token %}
+                <input type="search" name="query" class="form-control" placeholder="search..." value="{{search_query}}">
+                <button class="btn btn-success btn-sm px-3 mx-2" name="search">Search</button>
+            </form>
+        </div>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col"> Victim Name</th>
+                <th scope="col">Photo</th>
+                <th scope="col">Discription</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for consumer in consumers %}
+            <tr>
+                <th>{{consumer.id}}</th>
+                <td>{{consumer.name}}</td>
+                <td>
+                    {% if consumer.image %}
+                    <img src="{{ MEDIA_URL }}{{ consumer.image.url }}" alt="{{ consumer.name }} Image" style="max-width: 50px; max-height: 50px;">
+                    {% else %}
+                    No Image
+                    {% endif %}
+                </td>
+                <td>
+                    {{ consumer.content|truncatewords_html:30 }}
+                    {% if consumer.content|length > 30 %}
+                    <a href="#" data-target="fullContentModal_{{ consumer.id }}" class="modal-trigger">Read More</a>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="#" data-target="updateconsumerModal_{{consumer.id}}" class="modal-trigger btn btn-sm btn-success"><i class="fa-regular fa-pen-to-square"></i>Update</a>
+                    <a href="#" data-target="deleteconsumerModal_{{consumer.id}}" class="modal-trigger btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i>Delete</a>
+                </td>
+            </tr>
+            <!-- Full Content Modal -->
+            <div id="fullContentModal_{{ consumer.id }}" class="modal">
+                <div class="modal-content">
+                    <h4>Full Content</h4>
+                    {{ consumer.content|safe }}
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="modal-close btn btn-secondary">Close</a>
+                </div>
+            </div>
+            <!-- Update Consumer Modal -->
+            <div id="updateconsumerModal_{{consumer.id}}" class="modal">
+                <form action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-content">
+                        <h4>Update Consumer</h4>
+                        <input type="hidden" name="id" value="{{consumer.id}}">
+                        <div class="">
+                            <label for="name">Victim Name</label>
+                            <input required type="text" value="{{consumer.name}}" name="name" class="form-control">
+                        </div>
+                        <div class="mt-3">
+                            <label for="image">Victim Image</label>
+                            <input type="file" name="image" class="form-control">
+                            {% if consumer.image %}
+                            <img src="{{ consumer.image.url }}" alt="{{ consumer.name }}" class="mt-2" style="max-width: 100px; max-height: 100px;">
+                            {% endif %}
+                        </div>
+                        <div class="mt-3">
+                            <label for="content">Victim Description</label>
+                            <textarea name="content" class="form-control">{{ consumer.content }}</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="modal-close btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary" name="update">Update Consumer</button>
+                    </div>
+                </form>
+            </div>
+            <!-- Delete Consumer Modal -->
+            <div id="deleteconsumerModal_{{consumer.id}}" class="modal">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{consumer.id}}">
+                    <div class="modal-content">
+                        <h4>Confirm Deletion</h4>
+                        <p>Are you sure you want to delete the Victim with the following details?</p>
+                        <p><strong>Victim Name:</strong> {{consumer.name}}</p>
+                        {% if consumer.image %}
+                        <p><strong>Victim Image:</strong></p>
+                        <img src="{{ consumer.image.url }}" alt="{{ consumer.name }}" style="max-width: 100px; max-height: 100px;">
+                        {% endif %}
+                        {% if consumer.content %}
+                        <p><strong>Victim Description:</strong></p>
+                        <p>{{ consumer.content }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="modal-close btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-danger" name="delete">Delete Victim</button>
+                    </div>
+                </form>
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Add new Consumer Modal -->
+<div id="addnewconsumerModal" class="modal">
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-content">
+            <h4>Add new Victim</h4>
+            <div class="">
+                <label for="name">Victim Name</label>
+                <input required type="text" name="name" class="form-control">
+            </div>
+            <div class="mt-3">
+                <label for="image">Victim Image</label>
+                <input type="file" name="image" accept="image/*" class="form-control">
+            </div>
+            <div class="mt-3">
+                <label for="content">Victim Description</label>
+                <textarea name="content" class="form-control" rows="4"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="modal-close btn btn-secondary">Cancel</button>
+            <button type="submit" class="btn btn-primary" name="create">Add new Victim</button>
+        </div>
+    </form>
+</div>
+<!-- Stop -->
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block script %}
+<!-- Materialize JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modals = document.querySelectorAll('.modal');
+        M.Modal.init(modals);
+
+        var dropdowns = document.querySelectorAll('.dropdown-trigger');
+        M.Dropdown.init(dropdowns, { coverTrigger: false });
+    });
+</script>
+{% endblock %}

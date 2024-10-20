@@ -1,0 +1,58 @@
+<!-- user_notifications.html -->
+{% extends "base.html" %}
+{% block title %}Notifications{% endblock %}
+{% block style %}
+    <!-- Include Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        /* Your custom styles here */
+        div {
+            text-align: center;
+        }
+
+        #notification-title {
+            color: #333;
+        }
+
+        #notification-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .notification-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .notification-message {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .notification-created-at {
+            color: #888;
+        }
+    </style>
+{% endblock %}
+{% block index %}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 id="notification-title">Notifications</h1>
+
+        {% if notifications %}
+            <ul id="notification-list" class="collection">
+                {% for notification in notifications %}
+                    <li class="collection-item">
+                        <span class="notification-message">{{ notification.message }}</span>
+                        <span class="notification-created-at right">{{ notification.created_at }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No notifications.</p>
+        {% endif %}
+    </div>
+{% endblock %}

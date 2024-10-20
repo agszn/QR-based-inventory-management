@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}About{% endblock %}
+
+{% block style %}
+  <!-- Add Materialize CSS link here -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <style>
+    /* Additional custom styles */
+    .about {
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        max-width: 800px;
+    }
+
+    .about h1 {
+        text-align: center;
+    }
+
+    .about p {
+        font-weight: bold;
+    }
+
+    .about-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .about-img img {
+        max-width: 200px;
+        border-radius: 5px;
+        margin-right: 20px;
+    }
+
+    .about-text {
+        flex: 1;
+    }
+
+    .btn {
+        margin-left: 20%;
+    }
+  </style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<section class="about">
+    <h1>About</h1>
+    <p>
+        The NodeMCU-based Inventory Management system leverages IoT and QR code technology to track and monitor inventory items in real-time. It allows users to scan QR codes to quickly update and access inventory data, enhancing efficiency and accuracy in stock management. The system provides insights into inventory levels and helps prevent stockouts or overstocking. 
+    </p>
+    <hr>
+</section>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

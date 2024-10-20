@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Contact Form{% endblock %}
+
+{% block style %}
+<!-- Include Materialize CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<style>
+    /* Your custom styles here */
+    .container {
+        padding: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="center-align">Contact Form</h1>
+    <form method="post" action="{% url 'contact' %}" id="contactForm" class="col s12">
+        {% csrf_token %}
+        <div class="row">
+            {{ form.name.label_tag }}
+            <br>
+            <div class="input-field col s12">
+                {{ form.name }}
+            </div>
+        </div>
+        <div class="row">
+            {{ form.email.label_tag }}
+            <br>
+            <div class="input-field col s12">
+                {{ form.email }}
+            </div>
+        </div>
+        <div class="row">
+            {{ form.message.label_tag }}
+            <br>
+            <div class="input-field col s12">
+                {{ form.message }}
+            </div>
+        </div>
+        <button type="submit" class="btn waves-effect waves-light">Submit</button>
+    </form>
+</div>
+
+<!-- Modal -->
+<div id="successModal" class="modal">
+    <div class="modal-content">
+        <h4>Thank You!</h4>
+        <p>Thank you for contacting us!</p>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

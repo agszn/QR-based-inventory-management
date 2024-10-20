@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Notifications{% endblock %}
+{% block style %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Vehicle</title>
+    <!-- Include Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+{% endblock %}
+{% block index %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h1>{% if form.instance.pk %}Update{% else %}Create{% endif %} Item</h1>
+    <div class="row">
+        <form class="col s12" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="input-field col s6">
+                    {{ form.name.label_tag }}
+                    {{ form.name }}
+                </div>
+                <div class="input-field col s6">
+                    {{ form.units.label_tag }}
+                    {{ form.units }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <label>
+                        <input type="checkbox" name="{{ form.fragile.name }}" class="filled-in" {% if form.fragile.value %}checked{% endif %}>
+                        <span>{{ form.fragile.label }}</span>
+                    </label>
+                </div>
+                <div class="input-field col s6">
+                    {{ form.weight.label_tag }}
+                    {{ form.weight }}
+                </div>
+            </div>
+            
+            
+            <div class="row">
+                <div class="input-field col s6">
+                    {{ form.unit_choices.label_tag }}
+                    <select name="unit_choices">
+                        {% for choice in form.unit_choices.field.choices %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-field col s6">
+                    {{ form.item_class.label_tag }}
+                    <select name="item_class">
+                        {% for choice in form.item_class.field.choices %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">{% if form.instance.pk %}Update{% else %}Create{% endif %}
+                <i class="material-icons right">send</i>
+            </button>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems);
+    });
+</script>
+{% endblock %}

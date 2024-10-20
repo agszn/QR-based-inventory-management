@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+  }
+  .container {
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 800px;
+  }
+</style>
+{% endblock %}
+{% load static %}
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Analytics</h1>
+    <p>{{items_data}}</p>
+    The NodeMCU-based Inventory Management system leverages IoT and QR code technology to track and monitor inventory items in real-time. It allows users to scan QR codes to quickly update and access inventory data, enhancing efficiency and accuracy in stock management. The system provides insights into inventory levels and helps prevent stockouts or overstocking.
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block script %}
+
+<script>
+    // Fetch data from Django view and store it in JavaScript variables
+    const itemsData = {{ items_data }};
+    const unitsData = {{ units_data }};
+    const fragileData = {{ fragile_data }};
+    const unitPerItemData = {{ unit_per_item_data }};
+    const itemsAddedRemovedData = {{ items_added_removed_data }};
+
+    // Create charts using Chart.js
+    var itemsChart = new Chart(document.getElementById('itemsChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: ['Items'],
+            datasets: [{
+                label: 'Number of Items',
+                data: [itemsData],
+                backgroundColor: 'blue',
+            }]
+        }
+    });
+
+    var unitsChart = new Chart(document.getElementById('unitsChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: ['Units'],
+            datasets: [{
+                label: 'Number of Units',
+                data: [unitsData],
+                backgroundColor: 'green',
+            }]
+        }
+    });
+
+    var fragileChart = new Chart(document.getElementById('fragileChart').getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: ['Fragile'],
+            datasets: [{
+                label: 'Fragile',
+                data: [fragileData],
+                borderColor: 'red',
+            }]
+        }
+    });
+
+    // Add more charts as needed
+</script>
+{% endblock %}
+
